@@ -4,14 +4,25 @@
 
 #include "AutolinkedNativeModules.g.h"
 #include "ReactPackageProvider.h"
+#include <winrt/Windows.UI.Core.h>
+#include <windows.h>
+
 
 using namespace winrt;
 using namespace xaml;
 using namespace xaml::Controls;
 using namespace xaml::Navigation;
 
+// using namespace winrt::my61test;
+// using namespace winrt::my61test::implementation;
+using namespace winrt::Windows::UI::ViewManagement;
+using namespace winrt::Windows::UI::Core;
+using namespace winrt::Windows::Foundation;
 using namespace Windows::ApplicationModel;
 namespace winrt::jetstream_mailer::implementation
+
+
+
 {
 /// <summary>
 /// Initializes the singleton application object.  This is the first line of
@@ -48,12 +59,28 @@ App::App() noexcept
 /// will be used such as when the application is launched to open a specific file.
 /// </summary>
 /// <param name="e">Details about the launch request and process.</param>
-void App::OnLaunched(activation::LaunchActivatedEventArgs const& e)
+void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs const& e)
 {
     super::OnLaunched(e);
-
     Frame rootFrame = Window::Current().Content().as<Frame>();
     rootFrame.Navigate(xaml_typename<MainPage>(), box_value(e.Arguments()));
+
+    const int width = 1300;
+    const int height = 700;
+
+    ApplicationView::GetForCurrentView().SetPreferredMinSize(Size(width, height)); 
+    // ApplicationView::GetForCurrentView().SetPreferredMaxSize(Size(1300, 700)); 
+    ApplicationView::GetForCurrentView().TryResizeView(Size(width, height)); 
+    ApplicationView::GetForCurrentView().TryResizeView(Size(width, height)); 
+    ApplicationView::PreferredLaunchViewSize(Size(width, height)); 
+    ApplicationView::PreferredLaunchWindowingMode(ApplicationViewWindowingMode::PreferredLaunchViewSize);
+
+//   //SetWindowLong()...
+//     SetWindowPos(GetConsoleWindow(), NULL,
+//     GetSystemMetrics(SM_CXSCREEN)/2 - width/2,
+//     GetSystemMetrics(SM_CYSCREEN)/2 - height/2,
+//     width, height, SWP_SHOWWINDOW);
+
 }
 
 /// <summary>
@@ -62,9 +89,12 @@ void App::OnLaunched(activation::LaunchActivatedEventArgs const& e)
 void App::OnActivated(Activation::IActivatedEventArgs const &e) {
   auto preActivationContent = Window::Current().Content();
   super::OnActivated(e);
+
+  ApplicationView::GetForCurrentView().TryResizeView(Size(1300, 700)); 
   if (!preActivationContent && Window::Current()) {
     Frame rootFrame = Window::Current().Content().as<Frame>();
     rootFrame.Navigate(xaml_typename<MainPage>(), nullptr);
+    ApplicationView::GetForCurrentView().TryResizeView(Size(1300, 700)); 
   }
 }
 
